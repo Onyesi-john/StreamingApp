@@ -25,14 +25,15 @@ jobs:
             pip install -r requirements.txt
             pip install gdown
       - run:
-          name: Download YOLO Model from Google Drive
+          name: Download YOLOv8 Model from Google Drive
           command: |
-            gdown "https://drive.google.com/uc?id=17_67cqV9TiAXQTCd3FM4kBakzqym88Gk" -O best.pt
+            . venv/bin/activate
+            # Replace FILE_ID with your actual file ID
+            gdown https://drive.google.com/uc?id=17_67cqV9TiAXQTCd3FM4kBakzqym88Gk-O best.pt
       - persist_to_workspace:
           root: ~/project
           paths:
             - .
-            - best.pt
 
   build_and_push_docker_image:
     executor: arm_executor
