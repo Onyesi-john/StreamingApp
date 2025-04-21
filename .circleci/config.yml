@@ -1,0 +1,72 @@
+version: 2.1
+
+executors:
+  arm_executor:
+    machine: true  # Enables privileged mode for QEMU multi-arch builds
+
+jobs:
+  clone_repository:
+    docker:
+      - image: cimg/python:3.9
+    steps:
+      - checkout
+
+  setup_python_environment:
+    docker:
+      - image: cimg/python:3.9
+    steps:
+      - checkout
+      - run:
+          name: Set Up Python Environment
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install --upgrade pip
+            pip install -r requirements.txt
+            pip install gdown
+      - run:
+          name: Download YOLO Model from Google Drive
+          command: |
+            gdown "https://drive.google.com/uc?id=YOUR_FILE_ID_HERE" -O best.pt
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+            - best.pt
+
+  build_and_push_docker_image:
+    executor: arm_executor
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Start Docker Service
+          command: |
+            sudo systemctl start docker
+            sleep 5
+      - run:
+          name: Enable QEMU for Multi-Arch Builds
+          command: |
+            docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - run:
+          name: Authenticate with Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+      - run:
+          name: Build and Push Docker Image for Raspberry Pi
+          command: |
+            docker buildx create --use
+            docker buildx build --platform linux/arm64 -t $DOCKERHUB_USERNAME/waste_detection:latest --push .
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - clone_repository
+      - setup_python_environment:
+          requires:
+            - clone_repository
+      - build_and_push_docker_image:
+          requires:
+            - setup_python_environment
