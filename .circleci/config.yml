@@ -27,7 +27,7 @@ jobs:
       - run:
           name: Download YOLO Model from Google Drive
           command: |
-            gdown "https://drive.google.com/uc?id=YOUR_FILE_ID_HERE" -O best.pt
+            gdown "https://drive.google.com/uc?id=17_67cqV9TiAXQTCd3FM4kBakzqym88Gk" -O best.pt
       - persist_to_workspace:
           root: ~/project
           paths:
