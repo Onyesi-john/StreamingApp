@@ -1,5 +1,5 @@
 # Use a minimal and stable Python base image
-FROM python:3.13-alpine
+FROM python:3.10-slim-bullseye
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
