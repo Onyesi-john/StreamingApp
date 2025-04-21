@@ -1,0 +1,30 @@
+# .gitignore
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# VSCode
+.vscode/
+
+# Python virtual env
+venv/
+.env/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Ignore model weights
+*.pt
+*.pth
+*.zip
+
