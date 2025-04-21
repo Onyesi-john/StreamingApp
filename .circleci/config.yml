@@ -29,7 +29,7 @@ jobs:
           command: |
             . venv/bin/activate
             # Replace FILE_ID with your actual file ID
-            gdown https://drive.google.com/uc?id=17_67cqV9TiAXQTCd3FM4kBakzqym88Gk-O best.pt
+            gdown https://drive.google.com/uc?id=17_67cqV9TiAXQTCd3FM4kBakzqym88Gk -O best.pt
       - persist_to_workspace:
           root: ~/project
           paths:
